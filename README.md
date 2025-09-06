@@ -20,7 +20,7 @@ Rust-like Compiler: lexical analyzer, parser, sematic analyzer and object code g
 ## 上手指南(Guide)
 
 ### 项目概述(Project Introduction)
-本项目基于**C++**和**HTML/CSS/JavaScript**实现了一个类Rust语言编译器及其可视化界面，为2025年同济大学编译原理课程设计项目。  
+本项目基于 **C++** 和 **HTML/CSS/JavaScript** 实现了一个类Rust语言编译器及其可视化界面，为2025年同济大学编译原理课程设计项目。  
 项目主要分为两大部分：
 - 后端部分`/backend`为编译过程的实现，主要包括词法分析器`LexicalAnalyzer`（一遍扫描，作为语法分析器的子程序）、语法分析器`Parser`（采用LR1语法分析）、语义分析器`SemanticAnalyzer`（一遍扫描，作为语法分析器的子程序）、基本块划分器`BlockDivider`和目标代码生成器`Code Generator`五大核心模块的C++后端实现。用户可以直接通过终端运行的方式查看**文字化的编译结果**。
 - 前端部分`/code`为编译器的可视化界面，用户可通过**web应用**的形式在前端编辑区实时输入Rust语言代码，并查看编译过程中各种中间数据结构的可视化表示，整个流程与常见的Ide的使用流程无异。用户可以自主选择查看包括`GOTO表`、`ACTION表`、`语法分析树`、`移进-规约过程`、`四元式形式的中间代码`以及`MIPS32汇编格式的目标代码`的可视化结果。
