@@ -28,11 +28,11 @@ Rust-like Compiler: lexical analyzer, parser, sematic analyzer and object code g
 > - The backend part `/backend` implements the compilation process, mainly including the C++ backend implementation of five core modules: `Lexical Analyzer` (single-pass scanning, as a subroutine of the parser), `Parser` (using LR1 syntax analysis), `Semantic Analyzer` (single-pass scanning, as a subroutine of the parser), `Block Divider`, and `Code Generator`. Users can directly view the **textual compilation results** by running through the terminal.
 > - The frontend part `/code` is the visual interface of the compiler. Users can input Rust code in real time through the editing area of the **web application** and view the visual representations of various intermediate data structures during the compilation process, with the entire workflow consistent with that of common IDEs. Users can independently choose to view visual results including the `GOTO Table`, `ACTION Table`, `Syntax Analysis Tree`, `Shift-Reduce Process`, `Intermediate Code in Quadruple Form`, and `Target Code in MIPS32 Assembly Format`.
 
-<img width="417" height="218" alt="image" src="https://github.com/user-attachments/assets/982f6c38-b510-439a-94c8-32d64a971e21" />
+<img width="417" height="218" alt="image" src="https://github.com/user-attachments/assets/982f6c38-b510-439a-94c8-32d64a971e21" />  
 <img width="417" height="205" alt="image" src="https://github.com/user-attachments/assets/0615042b-fcf1-4a33-b689-14d519fa24a4" />
 
 #### 安装步骤(Installation Steps)
-##### 1. 生成后端应用：
+**1. 生成后端应用：**
 > [!TIP]
 > 若您直接拉取了全部仓库，则`/code`路径下已经完全包含了本步骤要生成的所有可执行文件，**您可以直接跳过此步进行第2步**。
 > If you have cloned the entire repo, the `/code` path will contain all required executable files, you may skip to step No.2
@@ -40,14 +40,14 @@ Rust-like Compiler: lexical analyzer, parser, sematic analyzer and object code g
 进入后端文件夹的`main.cpp`，按所需生成的模块部件生成对应的.exe并放入`/code`路径下。
 > Navigate to `main.cpp` in the backend folder, generate the corresponding .exe for the required module components, and place it under the `/code` path.
 
-##### 2. 运行前端界面：
+**2. 运行前端界面：**
 - 终端进入`/code`路径，首先使用`npm install`安装web界面运行所需的依赖包。
 - 安装完成后，终端输入如下命令，当看到`Server running on Port 3000`表示启动成功，双击进入`index.html`即可启动界面。
   ```sh
   node server.js
   ```
 > - Enter the `/code` path in the terminal and first use `npm install` to install the dependency packages required for running the web interface.
-> - After the installation is complete, enter the following command in the terminal. When you see `Server running on Port 3000`, it indicates a successful startup. Double-click index.html to launch the interface.
+> - After the installation is complete, enter the following command in the terminal. When you see `Server running on Port 3000`, it indicates a successful startup. Double-click `index.html` to launch the interface.
 >   ```sh
 >   node server.js
 >   ```
