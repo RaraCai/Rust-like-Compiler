@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>语法分析树组件</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        .node {
+            cursor: default;
+        }
+        .node rect {
+            fill: #f4f7ff;
+            stroke: #dee7ff;
+            stroke-width: 1px;
+        }
+        .node text {
+            font: 12px sans-serif;
+            pointer-events: none;
+        }
+        .link {
+            fill: none;
+            stroke: #dee7ff;
+            stroke-width: 2px;
+        }
+        .nodata {
+            width: 32px;
+            height: 32px;
+            background-image: url('./assets/nodata.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin-bottom: 10px;
+        }
+        .warning {
+            width: 32px;
+            height: 32px;
+            background-image: url('./assets/warning.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin-bottom: 10px;
+        }
+        #tree-container {
+            width: 100vw;
+            height: 100vh; /* 设置容器高度为视口高度 */
+            overflow: auto; /* 添加滚动条以适应大尺寸树图 */
+        }
+    </style>
+</head>
+<body>
+    <div id="tree-container"></div>
+    <script>
+        // 从 URL 参数获取数据
+        const urlParams = new URLSearchParams(window.location.search);
+        const reduceProductionString = urlParams.get('reduceProduction');   // 获取产生式列表
+        const errorString = urlParams.get('errors');                        // 获取错误列表
+
+        let reduceProductions;
+        let errors;
+
+       
+         try {
+            reduceProductions = JSON.parse(decodeURIComponent(reduceProductionString));
+            errors = JSON.parse(decodeURIComponent(errorString));
+        } catch (e) {
+            console.error('解析树数据失败:', e);
+        }
+    
+
+        const container = document.getElementById('tree-container');
+
+        if (!reduceProductions || reduceProductions.length === 0) {
+            if (errors && errors.length > 0){
+                container.innerHTML = `
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center;">
+                        <div class="warning"></div>
+                        <p style="color: #F0605C; margin-top: 0px; font-size: 14px;">语法分析错误</p>
+                    </div>
+                `;
+            }
+            else{
+                container.innerHTML = `
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center;">
+                        <div class="nodata"></div>
+                        <p style="color: #919191; margin-top: 0px; font-size: 14px;">数据暂无</p>
+                    </div>
+                `;
+            }
+        } else {
+            function reduceProduction(reduceProductions) {
+                class TreeNode {
+                    constructor(symbol) {
+                        this.name = symbol;
+                        this.children = [];
+                    }
+                }
+
+                const nodeStack = [];
+
+                for (const prod of reduceProductions) {
+                    const node = new TreeNode(prod.left);
+
+                    const children = [];
+                    for (let i = 0; i < prod.right.length; i++) {
+                        if (nodeStack.length > 0) {
+                            children.unshift(nodeStack.pop());
+                        }
+                    }
+
+                    node.children = children;
+                    nodeStack.push(node);
+                }
+
+                return nodeStack.pop();
+            }
+
+            const treeData = reduceProduction(reduceProductions);
+
+            // 计算树的尺寸
+            const treeLayout = d3.tree()
+                .nodeSize([80, 120]); // 设置节点的大小，避免重叠
+
+            const root = d3.hierarchy(treeData);
+
+            treeLayout(root);
+
+            // 计算树的宽度和高度
+            const width = root.height * 120 + 200;
+            const height = root.depth * 80 + 200;
+
+            // 创建 SVG 容器
+            const svg = d3.select("#tree-container")
+                .append("svg")
+                .attr("viewBox", `0 0 ${width} ${height}`)
+                .attr("overflow", "visible");
+
+            // 创建一个组元素，并设置变换属性
+            const g = svg.append("g")
+                .attr("transform", "translate(100, 100) scale(5)");
+
+            // 添加缩放功能
+            const zoom = d3.zoom()
+                .scaleExtent([1, 100]) // 设置缩放范围
+                .on("zoom", (event) => {
+                    g.attr("transform", `translate(${event.transform.x}, ${event.transform.y}) scale(${event.transform.k})`);
+                });
+
+            svg.call(zoom);
+
+            // 计算文本宽度的函数
+            function getTextWidth(text, font) {
+                const textNode = document.createElement('span');
+                textNode.textContent = text;
+                textNode.style.font = font;
+                document.body.appendChild(textNode);
+                const width = textNode.getBoundingClientRect().width;
+                document.body.removeChild(textNode);
+                return width;
+            }
+
+            // 调整节点位置以避免重叠
+            root.each((node) => {
+                if (node.parent && node.parent.children.length === 1) {
+                    const parentTextWidth = getTextWidth(node.parent.data.name, '12px sans-serif');
+                    const nodeTextWidth = getTextWidth(node.data.name, '12px sans-serif');
+
+                    if (parentTextWidth > 100 && nodeTextWidth > 100) {
+                        node.y += 120; // 向右移动节点
+                    }
+                }
+            });
+
+            // 添加连接线
+            g.selectAll(".link")
+                .data(root.links())
+                .enter()
+                .append("path")
+                .attr("class", "link")
+                .attr("d", d3.linkVertical()
+                    .x(d => d.y)
+                    .y(d => d.x));
+
+            // 添加节点
+            const nodes = g.selectAll(".node")
+                .data(root.descendants())
+                .enter()
+                .append("g")
+                .attr("class", "node")
+                .attr("transform", d => `translate(${d.y},${d.x})`);
+
+            // 添加节点矩形
+            nodes.append("rect")
+                .attr("width", d => d.data.name.length * 8 + 10)
+                .attr("height", 20)
+                .attr("x", d => -(d.data.name.length * 8 + 10) / 2)
+                .attr("y", -10);
+
+            // 添加节点文本
+            nodes.append("text")
+                .attr("dy", ".35em")
+                .attr("x", 0)
+                .attr("y", 0)
+                .attr("text-anchor", "middle")
+                .text(d => d.data.name)
+                .attr("fill", "#4070ff");
+        }
+    </script>
+</body>
+</html>

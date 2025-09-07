@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>类Rust编译器</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.0/codemirror.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="config.js"></script>
+</head>
+
+<body>
+    <header class="page-header">
+        <div>
+            <h1 class="title">类Rust编译器实现</h1>
+            <h2 class="subtitle">同济大学计算机科学与技术学院 | 编译原理课程设计项目</h2>
+        </div>
+        <img src="./assets/logo.png" alt="Logo" class="logo">
+    </header>
+    <div class="container">
+        <div id="editor"></div>
+        <div class="tabs-container">
+            <div class="tabs">
+                <button class="tab active" data-tab="tab1">GOTO表</button>
+                <button class="tab" data-tab="tab2">ACTION表</button>
+                <button class="tab" data-tab="tab3">"移进-规约"过程</button>
+                <button class="tab" data-tab="tab4">语法分析树</button>
+                <button class="tab" data-tab="tab5">中间代码</button>
+                <button class="tab" data-tab="tab6">目标代码</button>
+            </div>
+            <div class="tab-content" id="tab1">
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr class="table-headers" id="goto-table-headers"></tr>
+                        </thead>
+                        <tbody class="table-body" id="goto-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-content hidden" id="tab2">
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr class="table-headers" id="action-table-headers"></tr>
+                        </thead>
+                        <tbody class="table-body" id="action-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-content hidden" id="tab3">
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr class="table-headers" id="reduce-table-headers"></tr>
+                        </thead>
+                        <tbody class="table-body" id="reduce-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-content hidden" id="tab4">
+                <div id="syntax-tree-container"></div>
+            </div>
+            <div class="tab-content hidden" id="tab5">
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr class="table-headers" id="quadruple-table-headers"></tr>
+                        </thead>
+                        <tbody class="table-body" id="quadruple-table-body"></tbody>
+                    </table>
+                </div>
+                <button class="button" id="tmp-button">保存中间代码到文件</button>
+            </div>
+            <div class="tab-content hidden" id="tab6">
+                <div id="code"></div>
+                <button class="button" id="obj-button">保存目标代码到文件</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.0/codemirror.min.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>
