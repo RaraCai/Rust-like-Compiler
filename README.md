@@ -29,6 +29,9 @@ Rust-like Compiler: lexical analyzer, parser, sematic analyzer and object code g
 > - The backend part `/backend` implements the compilation process, mainly including the C++ backend implementation of five core modules: `Lexical Analyzer` (single-pass scanning, as a subroutine of the parser), `Parser` (using LR1 syntax analysis), `Semantic Analyzer` (single-pass scanning, as a subroutine of the parser), `Block Divider`, and `Code Generator`. Users can directly view the **textual compilation results** by running through the terminal.
 > - The frontend part `/code` is the visual interface of the compiler. Users can input Rust code in real time through the editing area of the **web application** and view the visual representations of various intermediate data structures during the compilation process, with the entire workflow consistent with that of common IDEs. Users can independently choose to view visual results including the `GOTO Table`, `ACTION Table`, `Syntax Analysis Tree`, `Shift-Reduce Process`, `Intermediate Code in Quadruple Form`, and `Target Code in MIPS32 Assembly Format`.
 
+您可以在`document.pdf`中查看项目设计的详细说明文档，`demo.mp4`是本项目运行的演示视频。
+> For detailed designs of the project, you may read `document.pdf`, and the `demo.mp4` offers a real-time demo vedio when the web application performances.
+
 ### 安装步骤(Installation Steps)
 **1. 生成后端应用：**
 > [!TIP]
